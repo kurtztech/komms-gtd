@@ -1,0 +1,28 @@
+.inbox-count {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  color: #fff;
+  margin-right: 15px;
+  text-align: center;
+}
+
+.inbox-count:hover {
+  cursor: pointer;
+}
+
+.counter {
+  font-size: 32px;
+}
+
+.process {
+  font-size: 20px;
+}
+
+.process > svg {
+  transform: translate(2px, 1px);
+}

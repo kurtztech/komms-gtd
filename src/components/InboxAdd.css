@@ -1,0 +1,33 @@
+.inbox-add form {
+  height: 40px;
+  display: flex;
+}
+
+.inbox-add input,
+.inbox-add button {
+  height: 100%;
+}
+
+.inbox-add input {
+  width: 600px;
+  padding-left: 5px;
+  background: #fff;
+  border: 2px solid #000;
+}
+
+.inbox-add button {
+  line-height: 1;
+  font-size: 36px;
+  width: 40px;
+  color: #fff;
+  background: #000;
+  border: 2px solid #000;
+}
+
+.inbox-add button:hover {
+  cursor: pointer;
+}
+
+.inbox-add > form > *:not(:last-child) {
+  margin-right: 15px;
+}

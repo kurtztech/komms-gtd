@@ -1,0 +1,18 @@
+.App {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 120px;
+}
+
+.inbox-bar {
+  display: flex;
+}
+
+.lists-section {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+}
