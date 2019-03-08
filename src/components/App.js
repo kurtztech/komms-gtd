@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import firebase from "firebase";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faPlay, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
+import base, { firebaseApp } from "../base";
 import InboxCount from "./InboxCount";
 import InboxAdd from "./InboxAdd";
 import Tasks from "./Tasks";
@@ -11,44 +13,69 @@ import Updating from "./Updating";
 library.add(faPlay);
 library.add(faTrash);
 
-const testTime = Date.now();
-
 class App extends Component {
   state = {
+    inbox: {},
+    tasks: {},
+    uid: null,
     processingInbox: false,
     hideTaskDescriptions: false,
     taskUpdating: null,
-    inbox: [],
-    tasks: []
+    loading: true
   };
 
   componentDidMount() {
+    firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        await this.authHandler({ user });
+        this.setState({ loading: false });
+      } else {
+        this.setState({ loading: false });
+      }
+    });
+
     document.addEventListener("keydown", this.hotkeys);
-    this.loadFromLocalStorage();
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hotkeys);
   }
 
-  componentDidUpdate() {
-    this.saveToLocalStorage();
-  }
-
-  loadFromLocalStorage = () => {
-    if (localStorage.getItem("inbox") != null) {
-      const inbox = JSON.parse(localStorage.getItem("inbox"));
-      const tasks = JSON.parse(localStorage.getItem("tasks"));
-
-      this.setState({ inbox, tasks });
-    }
+  authenticate = provider => {
+    const authProvider = new firebase.auth[`${provider}AuthProvider`]();
+    firebaseApp
+      .auth()
+      .signInWithPopup(authProvider)
+      .then(this.authHandler);
   };
 
-  saveToLocalStorage = () => {
-    const { inbox, tasks } = { ...this.state };
+  authHandler = async authData => {
+    await this.setState({
+      uid: authData.user.uid
+    });
 
-    localStorage.setItem("inbox", JSON.stringify(inbox));
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    this.ref = base.syncState(`/${this.state.uid}/inbox`, {
+      context: this,
+      state: "inbox"
+    });
+    this.ref = base.syncState(`/${this.state.uid}/tasks`, {
+      context: this,
+      state: "tasks"
+    });
+    this.ref = base.syncState(`/${this.state.uid}/hideTaskDescriptions`, {
+      context: this,
+      state: "hideTaskDescriptions"
+    });
+  };
+
+  logout = async () => {
+    await firebase.auth().signOut();
+    this.setState({
+      inbox: {},
+      tasks: {},
+      uid: null
+    });
+    base.removeBinding(this.ref);
   };
 
   hotkeys = e => {
@@ -58,7 +85,7 @@ class App extends Component {
       switch (code) {
         case "KeyA":
           e.preventDefault();
-          this.inboxAddRef.descRef.focus();
+          this.inboxAddRef.titleRef.focus();
           break;
         case "KeyH":
           e.preventDefault();
@@ -86,19 +113,23 @@ class App extends Component {
     document.activeElement.blur();
   };
 
-  inboxAdd = description => {
-    const inbox = [...this.state.inbox];
-    const newInbox = {
-      description,
-      createdDate: Date.now()
-    };
-    inbox.push(newInbox);
+  inboxAdd = oNewInbox => {
+    const { inbox } = { ...this.state };
+    inbox[oNewInbox.id] = oNewInbox;
     this.setState({ inbox });
     this.blur();
   };
 
+  getNextInbox = () => {
+    const { inbox } = { ...this.state };
+    const keys = Object.keys(inbox).sort(
+      (a, b) => inbox[a].updatedDate - inbox[b].updatedDate
+    );
+    return inbox[keys[0]];
+  };
+
   processInbox = () => {
-    this.setState({ processingInbox: this.state.inbox.length > 0 });
+    this.setState({ processingInbox: this.getNextInbox() });
   };
 
   closeProcessInbox = () => {
@@ -107,24 +138,15 @@ class App extends Component {
 
   saveInboxAsTask = oTask => {
     const { tasks, inbox } = { ...this.state };
-
-    oTask.updatedDate = Date.now();
-    oTask.id =
-      oTask.createdDate +
-      String(Math.round(Math.random() * 10000)).slice(0, 16);
-    tasks.push(oTask);
-    this.deleteNextInbox();
-
+    tasks[oTask.id] = oTask;
+    inbox[oTask.id] = null;
     this.setState({ tasks, inbox });
-
-    return this.state.inbox.length > 0;
   };
 
-  deleteNextInbox = () => {
+  deleteFromInbox = id => {
     const { inbox } = { ...this.state };
-    inbox.shift();
+    inbox[id] = null;
     this.setState({ inbox });
-    return this.state.inbox.length > 0;
   };
 
   updateTask = oTask => {
@@ -133,32 +155,16 @@ class App extends Component {
 
   saveTask = oTask => {
     const { tasks } = { ...this.state };
-
-    const index = tasks.reduce(
-      (acc, cur, ind) => (acc = cur.id === oTask.id ? ind : acc),
-      null
-    );
-
-    if (index != null) {
-      tasks[index] = oTask;
-      this.setState({ tasks });
-      this.closeUpdateTask();
-    }
+    tasks[oTask.id] = oTask;
+    this.setState({ tasks });
+    this.closeUpdateTask();
   };
 
   deleteTask = taskId => {
     const { tasks } = { ...this.state };
-
-    const index = tasks.reduce(
-      (acc, cur, ind) => (acc = cur.id === taskId ? ind : acc),
-      null
-    );
-
-    if (index != null) {
-      tasks.splice(index, 1);
-      this.setState({ tasks });
-      this.closeUpdateTask();
-    }
+    tasks[taskId] = null;
+    this.setState({ tasks });
+    this.closeUpdateTask();
   };
 
   closeUpdateTask = () => {
@@ -166,6 +172,24 @@ class App extends Component {
   };
 
   render() {
+    if (this.state.uid === null) {
+      return (
+        <div className="App">
+          {this.state.loading ? (
+            <h3>Loading...</h3>
+          ) : (
+            <button
+              onClick={() => {
+                this.authenticate("Google");
+              }}
+            >
+              Login with Google
+            </button>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div className="App">
         <div className="inbox-bar">
@@ -185,12 +209,13 @@ class App extends Component {
             updateTask={this.updateTask}
           />
         </div>
-        {this.state.processingInbox && this.state.inbox.length > 0 ? (
+        {this.state.processingInbox && this.getNextInbox() ? (
           <Processing
-            nextInbox={this.state.inbox[0]}
+            nextInbox={this.getNextInbox()}
             closeProcessInbox={this.closeProcessInbox}
             saveInboxAsTask={this.saveInboxAsTask}
-            deleteNextInbox={this.deleteNextInbox}
+            deleteFromInbox={this.deleteFromInbox}
+            inboxCount={Object.keys(this.state.inbox).length}
           />
         ) : (
           ""

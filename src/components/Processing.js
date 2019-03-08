@@ -10,6 +10,9 @@ export default class Processing extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hotkeys);
+    if (this.props.inboxCount === 1) {
+      this.props.closeProcessInbox();
+    }
   }
 
   hotkeys = e => {
@@ -18,7 +21,7 @@ export default class Processing extends Component {
       this.saveAsTask();
     } else if ((e.ctrlKey || e.metaKey) && e.keyCode === 68) {
       e.preventDefault();
-      this.deleteNextInbox();
+      this.deleteFromInbox();
     }
   };
 
@@ -28,48 +31,41 @@ export default class Processing extends Component {
     }
   };
 
-  saveAsTask = () => {
+  deleteFromInbox = () => {
+    this.props.deleteFromInbox(this.props.nextInbox.id);
+  };
+
+  saveAsTask = async () => {
     const currentInbox = this.props.nextInbox;
+    const newDate = Date.now();
 
     const oTask = {
+      ...currentInbox,
       title: this.titleRef.value,
       description: this.descRef.value,
-      createdDate: currentInbox.createdDate
+      createdDate: newDate,
+      updatedDate: newDate
     };
 
-    const loadNext = this.props.saveInboxAsTask(oTask);
-
-    if (loadNext) {
-      this.loadNextInfo();
-    }
-  };
-
-  deleteNextInbox = () => {
-    const loadNext = this.props.deleteNextInbox();
-
-    if (loadNext) {
-      this.loadNextInfo();
-    }
-  };
-
-  loadNextInfo = () => {
-    this.titleRef.value = this.props.nextInbox.description;
-    this.descRef.value = "";
+    this.props.saveInboxAsTask(oTask);
   };
 
   render() {
+    const { nextInbox } = this.props;
+
     return (
       <div
         id="processing-overlay"
         className="processing-overlay"
         onClick={this.handleClick}
+        key={nextInbox.id}
       >
         <div className="processing-modal">
           <input
             className="title-input"
             ref={tr => (this.titleRef = tr)}
             type="text"
-            defaultValue={this.props.nextInbox.description}
+            defaultValue={nextInbox.title}
             title="Title"
           />
           <textarea
@@ -82,7 +78,7 @@ export default class Processing extends Component {
           <FontAwesomeIcon
             className="trash-icon"
             icon="trash"
-            onClick={this.deleteNextInbox}
+            onClick={this.deleteFromInbox}
             title="Permanently delete"
           />
         </div>

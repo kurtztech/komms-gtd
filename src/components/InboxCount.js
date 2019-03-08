@@ -20,6 +20,8 @@ export default class InboxCount extends Component {
   };
 
   render() {
+    const { inbox } = this.props;
+
     return (
       <div
         className="inbox-count"
@@ -32,7 +34,7 @@ export default class InboxCount extends Component {
             <FontAwesomeIcon icon="play" />
           </p>
         ) : (
-          <p className="counter">{this.props.inbox.length}</p>
+          <p className="counter">{Object.keys(inbox).length}</p>
         )}
       </div>
     );

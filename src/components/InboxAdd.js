@@ -1,12 +1,19 @@
 import React, { Component } from "react";
+import uuidv4 from "uuid/v4";
 import "./InboxAdd.css";
 
 export default class InboxAdd extends Component {
   inboxAdd = e => {
     e.preventDefault();
-    const description = this.descRef.value;
-    this.props.inboxAdd(description);
-    this.descRef.value = "";
+    const time = Date.now();
+    const newInbox = {
+      id: uuidv4(),
+      title: this.titleRef.value,
+      createdDate: time,
+      updatedDate: time
+    };
+    this.props.inboxAdd(newInbox);
+    this.titleRef.value = "";
   };
 
   render() {
@@ -16,7 +23,7 @@ export default class InboxAdd extends Component {
           <input
             type="text"
             name="description"
-            ref={dr => (this.descRef = dr)}
+            ref={tr => (this.titleRef = tr)}
           />
           <button type="submit">+</button>
         </form>

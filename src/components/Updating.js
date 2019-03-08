@@ -61,6 +61,7 @@ export default class Updating extends Component {
         id="updating-overlay"
         className="updating-overlay"
         onClick={this.handleClick}
+        key={this.props.task.id}
       >
         <div className="updating-modal">
           <input
