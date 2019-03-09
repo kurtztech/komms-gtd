@@ -21,10 +21,20 @@ export default class InboxCount extends Component {
 
   render() {
     const { inbox } = this.props;
+    const inboxKeys = Object.keys(inbox);
+    const inboxCount = inboxKeys.length;
+    const now = Date.now();
+    const stale =
+      inboxKeys.reduce(
+        (acc, cur) =>
+          inbox[cur].createdDate < now ? inbox[cur].createdDate : acc,
+        now
+      ) <
+      now - 3600000;
 
     return (
       <div
-        className="inbox-count"
+        className={`inbox-count ${stale ? "stale" : ""}`}
         onMouseEnter={this.showPlayButton}
         onMouseLeave={this.hidePlayButton}
         title="Process Inbox"
@@ -34,7 +44,7 @@ export default class InboxCount extends Component {
             <FontAwesomeIcon icon="play" />
           </p>
         ) : (
-          <p className="counter">{Object.keys(inbox).length}</p>
+          <p className="counter">{inboxCount}</p>
         )}
       </div>
     );

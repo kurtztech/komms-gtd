@@ -16,3 +16,9 @@
   width: 100%;
   display: flex;
 }
+
+.logout-button {
+  position: absolute;
+  top: 18px;
+  right: 32px;
+}

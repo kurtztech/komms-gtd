@@ -230,6 +230,9 @@ class App extends Component {
         ) : (
           ""
         )}
+        <button className="logout-button" onClick={this.logout}>
+          Logout
+        </button>
       </div>
     );
   }
