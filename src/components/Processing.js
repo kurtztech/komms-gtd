@@ -82,6 +82,7 @@ export default class Processing extends Component {
             ref={dr => (this.descRef = dr)}
             rows="5"
             cols="20"
+            defaultValue={task.description}
             title="Description"
           />
           <FontAwesomeIcon
