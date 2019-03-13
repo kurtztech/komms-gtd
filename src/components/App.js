@@ -1,17 +1,23 @@
 import React, { Component } from "react";
 import firebase from "firebase";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPlay, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faTrash,
+  faExclamation,
+  faSave
+} from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 import base, { firebaseApp } from "../base";
 import InboxCount from "./InboxCount";
 import InboxAdd from "./InboxAdd";
 import Tasks from "./Tasks";
 import Processing from "./Processing";
-import Updating from "./Updating";
 
 library.add(faPlay);
 library.add(faTrash);
+library.add(faExclamation);
+library.add(faSave);
 
 class App extends Component {
   state = {
@@ -211,21 +217,21 @@ class App extends Component {
         </div>
         {this.state.processingInbox && this.getNextInbox() ? (
           <Processing
-            nextInbox={this.getNextInbox()}
-            closeProcessInbox={this.closeProcessInbox}
-            saveInboxAsTask={this.saveInboxAsTask}
-            deleteFromInbox={this.deleteFromInbox}
-            inboxCount={Object.keys(this.state.inbox).length}
+            task={this.getNextInbox()}
+            save={this.saveInboxAsTask}
+            close={this.closeProcessInbox}
+            delete={this.deleteFromInbox}
+            count={Object.keys(this.state.inbox).length}
           />
         ) : (
           ""
         )}
         {this.state.taskUpdating ? (
-          <Updating
+          <Processing
             task={this.state.taskUpdating}
-            saveTask={this.saveTask}
-            closeUpdateTask={this.closeUpdateTask}
-            deleteTask={this.deleteTask}
+            save={this.saveTask}
+            close={this.closeUpdateTask}
+            delete={this.deleteTask}
           />
         ) : (
           ""

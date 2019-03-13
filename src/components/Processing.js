@@ -10,62 +10,71 @@ export default class Processing extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hotkeys);
-    if (this.props.inboxCount === 1) {
-      this.props.closeProcessInbox();
+    if (this.props.count === 1) {
+      this.props.close();
     }
   }
 
   hotkeys = e => {
-    if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.keyCode === 13) {
       e.preventDefault();
-      this.saveAsTask();
+      this.checkRef.checked = true;
+      this.save();
+    } else if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+      e.preventDefault();
+      this.checkRef.checked = false;
+      this.save();
+    } else if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
+      e.preventDefault();
+      this.save();
     } else if ((e.ctrlKey || e.metaKey) && e.keyCode === 68) {
       e.preventDefault();
-      this.deleteFromInbox();
+      this.delete();
     }
   };
 
   handleClick = e => {
     if (e.target === document.querySelector("#processing-overlay")) {
-      this.props.closeProcessInbox();
+      this.props.close();
     }
   };
 
-  deleteFromInbox = () => {
-    this.props.deleteFromInbox(this.props.nextInbox.id);
+  delete = () => {
+    this.props.delete(this.props.task.id);
   };
 
-  saveAsTask = async () => {
-    const currentInbox = this.props.nextInbox;
+  save = async () => {
+    const { task } = this.props;
     const newDate = Date.now();
 
     const oTask = {
-      ...currentInbox,
+      ...task,
       title: this.titleRef.value,
       description: this.descRef.value,
-      createdDate: newDate,
-      updatedDate: newDate
+      updatedDate: newDate,
+      priority: this.checkRef.checked ? 1 : 0,
+      dueDate: false
     };
 
-    this.props.saveInboxAsTask(oTask);
+    this.props.save(oTask);
   };
 
   render() {
-    const { nextInbox } = this.props;
+    const { task } = this.props;
 
     return (
       <div
         id="processing-overlay"
         className="processing-overlay"
         onClick={this.handleClick}
-        key={nextInbox.id}
+        key={task.id}
       >
         <div className="processing-modal">
           <input
             className="title-input"
             ref={tr => (this.titleRef = tr)}
             type="text"
-            defaultValue={nextInbox.title}
+            defaultValue={task.title}
             title="Title"
           />
           <textarea
@@ -78,8 +87,24 @@ export default class Processing extends Component {
           <FontAwesomeIcon
             className="trash-icon"
             icon="trash"
-            onClick={this.deleteFromInbox}
+            onClick={this.delete}
             title="Permanently delete"
+          />
+          <div className="priority-group">
+            <label htmlFor="priority">Priority?</label>
+            <input
+              id="priority"
+              className="priority-checkbox"
+              type="checkbox"
+              defaultChecked={task.priority === 1}
+              ref={cr => (this.checkRef = cr)}
+            />
+          </div>
+          <FontAwesomeIcon
+            className="save-icon"
+            icon="save"
+            onClick={this.save}
+            title="Save Task"
           />
         </div>
       </div>

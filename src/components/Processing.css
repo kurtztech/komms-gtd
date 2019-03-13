@@ -43,3 +43,28 @@
   font-size: 32px;
   cursor: pointer;
 }
+
+.priority-group {
+  position: absolute;
+  bottom: 60px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.priority-group > *:not(:last-child) {
+  margin-right: 10px;
+}
+
+.priority-checkbox {
+  height: 20px;
+  width: 20px;
+}
+
+.save-icon {
+  position: absolute;
+  bottom: 13px;
+  right: 30px;
+  font-size: 32px;
+  cursor: pointer;
+}

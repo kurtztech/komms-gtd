@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./TaskCard.css";
 
 export default class TaskCard extends Component {
@@ -8,13 +9,16 @@ export default class TaskCard extends Component {
   };
 
   render() {
+    const { task } = this.props;
+
     return (
       <div className="task-card" onClick={this.updateTask}>
-        <h3>{this.props.task.title}</h3>
-        {this.props.hideDescriptions ? (
-          ""
+        <h3>{task.title}</h3>
+        {this.props.hideDescriptions ? "" : <p>{task.description}</p>}
+        {task.priority === 1 ? (
+          <FontAwesomeIcon className="high-priority" icon="exclamation" />
         ) : (
-          <p>{this.props.task.description}</p>
+          ""
         )}
       </div>
     );
