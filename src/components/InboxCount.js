@@ -27,7 +27,9 @@ export default class InboxCount extends Component {
     const stale =
       inboxKeys.reduce(
         (acc, cur) =>
-          inbox[cur].createdDate < now ? inbox[cur].createdDate : acc,
+          inbox[cur].createdDate < now && inbox[cur].createdDate < acc
+            ? inbox[cur].createdDate
+            : acc,
         now
       ) <
       now - 3600000;
@@ -35,12 +37,13 @@ export default class InboxCount extends Component {
     return (
       <div
         className={`inbox-count ${stale ? "stale" : ""}`}
+        onClick={this.props.processInbox}
         onMouseEnter={this.showPlayButton}
         onMouseLeave={this.hidePlayButton}
         title="Process Inbox"
       >
         {this.state.showPlayButton ? (
-          <p className="process" onClick={this.props.processInbox}>
+          <p className="process">
             <FontAwesomeIcon icon="play" />
           </p>
         ) : (
