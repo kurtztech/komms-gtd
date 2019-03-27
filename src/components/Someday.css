@@ -1,0 +1,40 @@
+.someday-heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.someday-heading > * {
+  margin: 0;
+}
+
+.someday-heading > *:not(:last-child) {
+  margin-right: 25px;
+}
+
+.someday-folder-group {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.someday-folder-group {
+  cursor: pointer;
+}
+
+.someday-folder-icon {
+  font-size: 44px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.someday-folder-count {
+  font-size: 24px;
+  color: #fff;
+  transform: translate(-6px, 4px);
+}

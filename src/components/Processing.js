@@ -43,7 +43,23 @@ export default class Processing extends Component {
     this.props.delete(this.props.task.id);
   };
 
-  save = async () => {
+  save = () => {
+    if (this.props.type === "someday") {
+      this.saveSomeday();
+    } else {
+      this.saveTask();
+    }
+  };
+
+  saveAlt = () => {
+    if (this.props.type !== "someday") {
+      this.saveSomeday();
+    } else {
+      this.saveTask();
+    }
+  };
+
+  saveTask = async () => {
     const { task } = this.props;
     const newDate = Date.now();
 
@@ -56,7 +72,37 @@ export default class Processing extends Component {
       dueDate: false
     };
 
-    this.props.save(oTask);
+    switch (this.props.type) {
+      case "someday":
+        this.props.saveAsTask(oTask);
+        break;
+      default:
+        this.props.save(oTask);
+        break;
+    }
+  };
+
+  saveSomeday = async () => {
+    const { task } = this.props;
+    const newDate = Date.now();
+
+    const oTask = {
+      ...task,
+      title: this.titleRef.value,
+      description: this.descRef.value,
+      updatedDate: newDate,
+      priority: 0,
+      dueDate: false
+    };
+
+    switch (this.props.type) {
+      case "someday":
+        this.props.save(oTask);
+        break;
+      default:
+        this.props.saveAsSomeday(oTask);
+        break;
+    }
   };
 
   render() {
@@ -101,6 +147,12 @@ export default class Processing extends Component {
               ref={cr => (this.checkRef = cr)}
             />
           </div>
+          <FontAwesomeIcon
+            className="someday-icon"
+            icon={this.props.type !== "someday" ? "cloud" : "tasks"}
+            onClick={this.saveAlt}
+            title={this.props.type === "someday" ? "Task" : "Someday"}
+          />
           <FontAwesomeIcon
             className="save-icon"
             icon="save"

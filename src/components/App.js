@@ -5,29 +5,42 @@ import {
   faPlay,
   faTrash,
   faExclamation,
-  faSave
+  faSave,
+  faFolder,
+  faFolderOpen,
+  faCloud,
+  faTasks
 } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 import base, { firebaseApp } from "../base";
 import InboxCount from "./InboxCount";
 import InboxAdd from "./InboxAdd";
 import Tasks from "./Tasks";
+import Someday from "./Someday";
 import Processing from "./Processing";
 
 library.add(faPlay);
 library.add(faTrash);
 library.add(faExclamation);
 library.add(faSave);
+library.add(faFolder);
+library.add(faFolderOpen);
+library.add(faCloud);
+library.add(faTasks);
 
 class App extends Component {
   state = {
     inbox: {},
     tasks: {},
+    someday: {},
     uid: null,
     processingInbox: false,
     hideTaskDescriptions: false,
     taskUpdating: null,
-    loading: true
+    somedayUpdating: null,
+    loading: true,
+    showingSomeday: true,
+    hoveringSomeday: false
   };
 
   componentDidMount() {
@@ -68,9 +81,17 @@ class App extends Component {
       context: this,
       state: "tasks"
     });
+    this.ref = base.syncState(`/${this.state.uid}/someday`, {
+      context: this,
+      state: "someday"
+    });
     this.ref = base.syncState(`/${this.state.uid}/hideTaskDescriptions`, {
       context: this,
       state: "hideTaskDescriptions"
+    });
+    this.ref = base.syncState(`/${this.state.uid}/showingSomeday`, {
+      context: this,
+      state: "showingSomeday"
     });
   };
 
@@ -177,6 +198,59 @@ class App extends Component {
     this.setState({ taskUpdating: null });
   };
 
+  saveInboxAsSomeday = oTask => {
+    const { inbox, someday } = { ...this.state };
+    someday[oTask.id] = oTask;
+    inbox[oTask.id] = null;
+    this.setState({ inbox, someday });
+  };
+
+  saveTaskAsSomeday = oTask => {
+    const { tasks, someday } = { ...this.state };
+    someday[oTask.id] = oTask;
+    tasks[oTask.id] = null;
+    this.setState({ tasks, someday });
+    this.closeUpdateTask();
+  };
+
+  saveSomedayAsTask = oTask => {
+    const { tasks, someday } = { ...this.state };
+    tasks[oTask.id] = oTask;
+    someday[oTask.id] = null;
+    this.setState({ tasks, someday });
+    this.closeUpdateSomeday();
+  };
+
+  saveSomeday = oTask => {
+    const { someday } = { ...this.state };
+    someday[oTask.id] = oTask;
+    this.setState({ someday });
+    this.closeUpdateSomeday();
+  };
+
+  updateSomeday = oTask => {
+    this.setState({ somedayUpdating: oTask });
+  };
+
+  closeUpdateSomeday = () => {
+    this.setState({ somedayUpdating: null });
+  };
+
+  deleteSomeday = taskId => {
+    const { someday } = { ...this.state };
+    someday[taskId] = null;
+    this.setState({ someday });
+    this.closeUpdateSomeday();
+  };
+
+  toggleHoveringSomeday = () => {
+    this.setState({ hoveringSomeday: !this.state.hoveringSomeday });
+  };
+
+  toggleShowingSomeday = () => {
+    this.setState({ showingSomeday: !this.state.showingSomeday });
+  };
+
   render() {
     if (this.state.uid === null) {
       return (
@@ -210,18 +284,32 @@ class App extends Component {
         </div>
         <div className="lists-section">
           <Tasks
+            title="Next Tasks"
             tasks={this.state.tasks}
             hideDescriptions={this.state.hideTaskDescriptions}
             updateTask={this.updateTask}
           />
+          <Someday
+            title="Someday"
+            tasks={this.state.someday}
+            hideDescriptions={this.state.hideTaskDescriptions}
+            updateSomeday={this.updateSomeday}
+            showing={this.state.showingSomeday}
+            hovering={this.state.hoveringSomeday}
+            toggleShowing={this.toggleShowingSomeday}
+            toggleHovering={this.toggleHoveringSomeday}
+          />
+          {/* <Folders someday={this.state.someday} /> */}
         </div>
         {this.state.processingInbox && this.getNextInbox() ? (
           <Processing
             task={this.getNextInbox()}
             save={this.saveInboxAsTask}
+            saveAsSomeday={this.saveInboxAsSomeday}
             close={this.closeProcessInbox}
             delete={this.deleteFromInbox}
             count={Object.keys(this.state.inbox).length}
+            type="inbox"
           />
         ) : (
           ""
@@ -230,8 +318,22 @@ class App extends Component {
           <Processing
             task={this.state.taskUpdating}
             save={this.saveTask}
+            saveAsSomeday={this.saveTaskAsSomeday}
             close={this.closeUpdateTask}
             delete={this.deleteTask}
+            type="task"
+          />
+        ) : (
+          ""
+        )}
+        {this.state.somedayUpdating ? (
+          <Processing
+            task={this.state.somedayUpdating}
+            save={this.saveSomeday}
+            saveAsTask={this.saveSomedayAsTask}
+            close={this.closeUpdateSomeday}
+            delete={this.deleteSomeday}
+            type="someday"
           />
         ) : (
           ""

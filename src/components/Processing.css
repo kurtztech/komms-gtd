@@ -69,3 +69,10 @@
   font-size: 32px;
   cursor: pointer;
 }
+.someday-icon {
+  position: absolute;
+  bottom: 12px;
+  right: 90px;
+  font-size: 32px;
+  cursor: pointer;
+}

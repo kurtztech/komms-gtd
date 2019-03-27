@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import TaskCard from "./TaskCard";
+import "./Tasks.css";
 
 export default class Tasks extends Component {
   render() {
@@ -10,7 +11,7 @@ export default class Tasks extends Component {
 
     return (
       <div className="tasks-list">
-        <h1>Next Tasks</h1>
+        <h1 className="tasks-heading">{this.props.title}</h1>
         {high.map(id => (
           <TaskCard
             key={id}
