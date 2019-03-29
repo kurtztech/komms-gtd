@@ -9,7 +9,8 @@ export default class Tasks extends Component {
       tasks,
       showing,
       hovering,
-      toggleHovering,
+      hoveringOn,
+      hoveringOff,
       toggleShowing,
       hideDescriptions,
       updateSomeday
@@ -22,8 +23,8 @@ export default class Tasks extends Component {
           <h1>{this.props.title}</h1>
           <div
             className="someday-folder-group"
-            onMouseEnter={toggleHovering}
-            onMouseLeave={toggleHovering}
+            onMouseEnter={hoveringOn}
+            onMouseLeave={hoveringOff}
             onClick={toggleShowing}
           >
             <FontAwesomeIcon

@@ -243,8 +243,12 @@ class App extends Component {
     this.closeUpdateSomeday();
   };
 
-  toggleHoveringSomeday = () => {
-    this.setState({ hoveringSomeday: !this.state.hoveringSomeday });
+  hoveringOnSomeday = () => {
+    this.setState({ hoveringSomeday: true });
+  };
+
+  hoveringOffSomeday = () => {
+    this.setState({ hoveringSomeday: false });
   };
 
   toggleShowingSomeday = () => {
@@ -298,7 +302,8 @@ class App extends Component {
             showing={this.state.showingSomeday}
             hovering={this.state.hoveringSomeday}
             toggleShowing={this.toggleShowingSomeday}
-            toggleHovering={this.toggleHoveringSomeday}
+            hoveringOn={this.hoveringOnSomeday}
+            hoveringOff={this.hoveringOffSomeday}
           />
           {/* <Folders someday={this.state.someday} /> */}
         </div>
