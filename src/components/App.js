@@ -262,6 +262,7 @@ class App extends Component {
               onClick={() => {
                 this.authenticate("Google");
               }}
+              className="login-button"
             >
               Login with Google
             </button>

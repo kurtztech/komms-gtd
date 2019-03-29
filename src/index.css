@@ -3,6 +3,10 @@ html {
   box-sizing: border-box;
 }
 
+body {
+  background: #e7e7e7;
+}
+
 html,
 body,
 #root {

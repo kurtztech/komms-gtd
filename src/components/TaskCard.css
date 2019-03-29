@@ -1,8 +1,15 @@
 .task-card {
-  border: 2px solid #000;
+  border: 2px solid #fff;
+  border-radius: 4px;
   padding: 0 20px;
   margin-bottom: 15px;
   position: relative;
+  background: #fff;
+  box-shadow: 0px 1px 1px 1px #d0d0d0;
+}
+
+.task-card > h3 {
+  border-radius: 5%;
 }
 
 .task-card:hover {

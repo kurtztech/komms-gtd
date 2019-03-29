@@ -138,7 +138,7 @@ export default class Processing extends Component {
             title="Permanently delete"
           />
           <div className="priority-group">
-            <label htmlFor="priority">Priority?</label>
+            <label htmlFor="priority">Priority</label>
             <input
               id="priority"
               className="priority-checkbox"
