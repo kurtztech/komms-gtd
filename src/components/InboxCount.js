@@ -23,20 +23,10 @@ export default class InboxCount extends Component {
     const { inbox } = this.props;
     const inboxKeys = Object.keys(inbox);
     const inboxCount = inboxKeys.length;
-    const now = Date.now();
-    const stale =
-      inboxKeys.reduce(
-        (acc, cur) =>
-          inbox[cur].createdDate < now && inbox[cur].createdDate < acc
-            ? inbox[cur].createdDate
-            : acc,
-        now
-      ) <
-      now - 3600000;
 
     return (
       <div
-        className={`inbox-count ${stale ? "stale" : ""}`}
+        className={`inbox-count ${this.props.stale ? "stale" : ""}`}
         onClick={this.props.processInbox}
         onMouseEnter={this.showPlayButton}
         onMouseLeave={this.hidePlayButton}

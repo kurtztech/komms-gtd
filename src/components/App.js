@@ -40,7 +40,8 @@ class App extends Component {
     somedayUpdating: null,
     loading: true,
     showingSomeday: true,
-    hoveringSomeday: false
+    hoveringSomeday: false,
+    inboxStale: false
   };
 
   componentDidMount() {
@@ -54,10 +55,17 @@ class App extends Component {
     });
 
     document.addEventListener("keydown", this.hotkeys);
+
+    this.calcStaleInbox();
+    this.staleRef = setInterval(() => {
+      this.calcStaleInbox();
+    }, 1000);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hotkeys);
+
+    clearInterval(this.staleRef);
   }
 
   authenticate = provider => {
@@ -255,6 +263,25 @@ class App extends Component {
     this.setState({ showingSomeday: !this.state.showingSomeday });
   };
 
+  calcStaleInbox = () => {
+    const now = Date.now();
+
+    const { inbox } = this.state;
+    const inboxKeys = Object.keys(inbox);
+
+    const inboxStale =
+      inboxKeys.reduce(
+        (acc, cur) =>
+          inbox[cur].createdDate < now && inbox[cur].createdDate < acc
+            ? inbox[cur].createdDate
+            : acc,
+        now
+      ) <
+      now - 3600000;
+
+    this.setState({ inboxStale });
+  };
+
   render() {
     if (this.state.uid === null) {
       return (
@@ -281,6 +308,7 @@ class App extends Component {
           <InboxCount
             inbox={this.state.inbox}
             processInbox={this.processInbox}
+            stale={this.state.inboxStale}
           />
           <InboxAdd
             ref={iar => (this.inboxAddRef = iar)}
