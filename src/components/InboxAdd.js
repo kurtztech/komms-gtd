@@ -23,7 +23,7 @@ export default class InboxAdd extends Component {
           <input
             type="text"
             name="description"
-            placeholder="hotkey: a"
+            placeholder='Press "a" or click to start typing'
             ref={tr => (this.titleRef = tr)}
           />
           <button type="submit">+</button>
