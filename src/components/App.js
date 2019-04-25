@@ -59,7 +59,7 @@ class App extends Component {
     this.calcStaleInbox();
     this.staleRef = setInterval(() => {
       this.calcStaleInbox();
-    }, 60000);
+    }, 1000);
   }
 
   componentWillUnmount() {
