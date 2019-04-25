@@ -30,7 +30,7 @@ export default class InboxCount extends Component {
         onClick={this.props.processInbox}
         onMouseEnter={this.showPlayButton}
         onMouseLeave={this.hidePlayButton}
-        title="Process Inbox"
+        title="Process Inbox&#10;hotkey: p"
       >
         {this.state.showPlayButton ? (
           <p className="process">

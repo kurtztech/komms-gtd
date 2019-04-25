@@ -135,7 +135,7 @@ export default class Processing extends Component {
             className="trash-icon"
             icon="trash"
             onClick={this.delete}
-            title="Permanently delete"
+            title="Permanently Delete&#10;Ctrl+D"
           />
           <div className="priority-group">
             <label htmlFor="priority">Priority</label>
@@ -157,7 +157,7 @@ export default class Processing extends Component {
             className="save-icon"
             icon="save"
             onClick={this.save}
-            title="Save Task"
+            title="Save Task&#10;Ctrl+S"
           />
         </div>
       </div>

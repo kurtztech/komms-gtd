@@ -16,7 +16,20 @@ export default class TaskCard extends Component {
         <h3>{task.title}</h3>
         {this.props.hideDescriptions ? "" : <p>{task.description}</p>}
         {task.priority === 1 ? (
-          <FontAwesomeIcon className="high-priority" icon="exclamation" />
+          <FontAwesomeIcon
+            className="high-priority"
+            icon="exclamation"
+            title="High Priority"
+          />
+        ) : (
+          ""
+        )}
+        {task.description !== "" ? (
+          <FontAwesomeIcon
+            className="task-notes"
+            icon="stream"
+            title="Contains Notes"
+          />
         ) : (
           ""
         )}

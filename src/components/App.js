@@ -9,7 +9,8 @@ import {
   faFolder,
   faFolderOpen,
   faCloud,
-  faTasks
+  faTasks,
+  faStream
 } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 import base, { firebaseApp } from "../base";
@@ -27,6 +28,7 @@ library.add(faFolder);
 library.add(faFolderOpen);
 library.add(faCloud);
 library.add(faTasks);
+library.add(faStream);
 
 class App extends Component {
   state = {
@@ -40,8 +42,7 @@ class App extends Component {
     somedayUpdating: null,
     loading: true,
     showingSomeday: true,
-    hoveringSomeday: false,
-    inboxStale: false
+    hoveringSomeday: false
   };
 
   componentDidMount() {
@@ -55,17 +56,10 @@ class App extends Component {
     });
 
     document.addEventListener("keydown", this.hotkeys);
-
-    this.calcStaleInbox();
-    this.staleRef = setInterval(() => {
-      this.calcStaleInbox();
-    }, 100);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hotkeys);
-
-    clearInterval(this.staleRef);
   }
 
   authenticate = provider => {
@@ -263,7 +257,7 @@ class App extends Component {
     this.setState({ showingSomeday: !this.state.showingSomeday });
   };
 
-  calcStaleInbox = () => {
+  isInboxStale = () => {
     const now = Date.now();
 
     const { inbox } = this.state;
@@ -279,7 +273,7 @@ class App extends Component {
       ) <
       now - 3600000;
 
-    this.setState({ inboxStale });
+    return inboxStale;
   };
 
   render() {
@@ -308,7 +302,7 @@ class App extends Component {
           <InboxCount
             inbox={this.state.inbox}
             processInbox={this.processInbox}
-            stale={this.state.inboxStale}
+            stale={this.isInboxStale()}
           />
           <InboxAdd
             ref={iar => (this.inboxAddRef = iar)}
