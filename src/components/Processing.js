@@ -69,7 +69,8 @@ export default class Processing extends Component {
       description: this.descRef.value,
       updatedDate: newDate,
       priority: this.checkRef.checked ? 1 : 0,
-      dueDate: false
+      dueDate: false,
+      delegate: this.delRef.value
     };
 
     switch (this.props.type) {
@@ -145,6 +146,16 @@ export default class Processing extends Component {
               type="checkbox"
               defaultChecked={task.priority === 1}
               ref={cr => (this.checkRef = cr)}
+            />
+          </div>
+          <div className="delegated-group">
+            <FontAwesomeIcon className="delegated-icon" icon="user" />
+            <input
+              id="delegated"
+              className="delegated-input"
+              type="text"
+              defaultValue={task.delegate}
+              ref={dr => (this.delRef = dr)}
             />
           </div>
           <FontAwesomeIcon

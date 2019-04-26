@@ -10,14 +10,15 @@ import {
   faFolderOpen,
   faCloud,
   faTasks,
-  faStream
+  faStream,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 import base, { firebaseApp } from "../base";
 import InboxCount from "./InboxCount";
 import InboxAdd from "./InboxAdd";
 import Tasks from "./Tasks";
-import Someday from "./Someday";
+import Folder from "./Folder";
 import Processing from "./Processing";
 
 library.add(faPlay);
@@ -29,6 +30,7 @@ library.add(faFolderOpen);
 library.add(faCloud);
 library.add(faTasks);
 library.add(faStream);
+library.add(faUser);
 
 class App extends Component {
   state = {
@@ -42,7 +44,9 @@ class App extends Component {
     somedayUpdating: null,
     loading: true,
     showingSomeday: true,
-    hoveringSomeday: false
+    hoveringSomeday: false,
+    showingDelegated: true,
+    hoveringDelegated: false
   };
 
   componentDidMount() {
@@ -94,6 +98,10 @@ class App extends Component {
     this.ref = base.syncState(`/${this.state.uid}/showingSomeday`, {
       context: this,
       state: "showingSomeday"
+    });
+    this.ref = base.syncState(`/${this.state.uid}/showingDelegated`, {
+      context: this,
+      state: "showingDelegated"
     });
   };
 
@@ -178,6 +186,18 @@ class App extends Component {
     this.setState({ inbox });
   };
 
+  getTasks = () => {
+    const { tasks } = { ...this.state };
+    const keys = Object.keys(tasks);
+    const tasksOut = {};
+    keys.forEach(key => {
+      if (tasks[key].delegate === "") {
+        tasksOut[key] = tasks[key];
+      }
+    });
+    return tasksOut;
+  };
+
   updateTask = oTask => {
     this.setState({ taskUpdating: oTask });
   };
@@ -245,6 +265,18 @@ class App extends Component {
     this.closeUpdateSomeday();
   };
 
+  getDelegated = () => {
+    const { tasks } = { ...this.state };
+    const keys = Object.keys(tasks);
+    const tasksOut = {};
+    keys.forEach(key => {
+      if (tasks[key].delegate !== "") {
+        tasksOut[key] = tasks[key];
+      }
+    });
+    return tasksOut;
+  };
+
   hoveringOnSomeday = () => {
     this.setState({ hoveringSomeday: true });
   };
@@ -255,6 +287,18 @@ class App extends Component {
 
   toggleShowingSomeday = () => {
     this.setState({ showingSomeday: !this.state.showingSomeday });
+  };
+
+  hoveringOnDelegated = () => {
+    this.setState({ hoveringDelegated: true });
+  };
+
+  hoveringOffDelegated = () => {
+    this.setState({ hoveringDelegated: false });
+  };
+
+  toggleShowingDelegated = () => {
+    this.setState({ showingDelegated: !this.state.showingDelegated });
   };
 
   isInboxStale = () => {
@@ -312,22 +356,32 @@ class App extends Component {
         <div className="lists-section">
           <Tasks
             title="Next Tasks"
-            tasks={this.state.tasks}
+            tasks={this.getTasks()}
             hideDescriptions={this.state.hideTaskDescriptions}
             updateTask={this.updateTask}
           />
-          <Someday
+          <Folder
+            title="Delegated"
+            tasks={this.getDelegated()}
+            hideDescriptions={this.state.hideTaskDescriptions}
+            updateTasks={this.updateTask}
+            showing={this.state.showingDelegated}
+            hovering={this.state.hoveringDelegated}
+            toggleShowing={this.toggleShowingDelegated}
+            hoveringOn={this.hoveringOnDelegated}
+            hoveringOff={this.hoveringOffDelegated}
+          />
+          <Folder
             title="Someday"
             tasks={this.state.someday}
             hideDescriptions={this.state.hideTaskDescriptions}
-            updateSomeday={this.updateSomeday}
+            updateTasks={this.updateSomeday}
             showing={this.state.showingSomeday}
             hovering={this.state.hoveringSomeday}
             toggleShowing={this.toggleShowingSomeday}
             hoveringOn={this.hoveringOnSomeday}
             hoveringOff={this.hoveringOffSomeday}
           />
-          {/* <Folders someday={this.state.someday} /> */}
         </div>
         {this.state.processingInbox && this.getNextInbox() ? (
           <Processing

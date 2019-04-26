@@ -25,7 +25,7 @@
 }
 
 .title-input {
-  padding: 5px 10px;
+  padding: 6px 10px 3px;
   background: #fff;
   border: none;
   border-right: 2px solid #f0f0f0;
@@ -47,6 +47,17 @@
   margin-top: 30px;
 }
 
+.delegated-input {
+  padding: 6px 0 3px 8px;
+  width: 125px;
+  background: #fff;
+  border: none;
+  border-right: 2px solid #f0f0f0;
+  border-bottom: 2px solid #f0f0f0;
+  box-shadow: inset 2px 2px 2px #d0d0d0;
+  border-radius: 4px;
+}
+
 .trash-icon {
   position: absolute;
   bottom: 15px;
@@ -63,6 +74,18 @@
 }
 
 .priority-group > *:not(:last-child) {
+  margin-right: 10px;
+}
+
+.delegated-group {
+  position: absolute;
+  bottom: 13px;
+  right: 150px;
+  display: flex;
+  align-items: center;
+}
+
+.delegated-group > *:not(:last-child) {
   margin-right: 10px;
 }
 

@@ -1,18 +1,18 @@
-.someday-heading {
+.folder-heading {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.someday-heading > * {
+.folder-heading > * {
   margin: 0;
 }
 
-.someday-heading > *:not(:last-child) {
+.folder-heading > *:not(:last-child) {
   margin-right: 20px;
 }
 
-.someday-folder-group {
+.folder-group {
   width: 40px;
   height: 40px;
   position: relative;
@@ -23,14 +23,14 @@
   transform: translateY(-2px);
 }
 
-.someday-folder-icon {
+.folder-icon {
   font-size: 44px;
   position: absolute;
   top: 0;
   left: 0;
 }
 
-.someday-folder-count {
+.folder-count {
   font-size: 24px;
   color: #fff;
   transform: translate(-6px, 4px);

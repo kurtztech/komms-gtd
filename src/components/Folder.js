@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TaskCard from "./TaskCard";
-import "./Someday.css";
+import "./Folder.css";
 
-export default class Tasks extends Component {
+export default class Folder extends Component {
   render() {
     const {
       tasks,
@@ -13,22 +13,22 @@ export default class Tasks extends Component {
       hoveringOff,
       toggleShowing,
       hideDescriptions,
-      updateSomeday
+      updateTasks
     } = this.props;
     const taskKeys = Object.keys(tasks);
 
     return (
       <div className="tasks-list">
-        <div className="someday-heading">
+        <div className="folder-heading">
           <h1>{this.props.title}</h1>
           <div
-            className="someday-folder-group"
+            className="folder-group"
             onMouseEnter={hoveringOn}
             onMouseLeave={hoveringOff}
             onClick={toggleShowing}
           >
             <FontAwesomeIcon
-              className="someday-folder-icon"
+              className="folder-icon"
               icon={
                 (showing && !hovering) || (!showing && hovering)
                   ? "folder-open"
@@ -36,9 +36,7 @@ export default class Tasks extends Component {
               }
             />
             {!showing && !hovering ? (
-              <span className="someday-folder-count">
-                {Object.keys(tasks).length}
-              </span>
+              <span className="folder-count">{Object.keys(tasks).length}</span>
             ) : (
               ""
             )}
@@ -50,7 +48,7 @@ export default class Tasks extends Component {
                 key={id}
                 task={tasks[id]}
                 hideDescriptions={hideDescriptions}
-                updateTask={updateSomeday}
+                updateTask={updateTasks}
               />
             ))
           : ""}
