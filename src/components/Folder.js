@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TaskCard from './TaskCard';
-import './Folder.css';
+import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import TaskCard from "./TaskCard";
+import "./Folder.css";
 
 export default class Folder extends Component {
   render() {
@@ -14,7 +14,7 @@ export default class Folder extends Component {
       toggleShowing,
       hideDescriptions,
       updateTasks,
-      title,
+      title
     } = this.props;
     const taskKeys = Object.keys(tasks);
 
@@ -33,14 +33,14 @@ export default class Folder extends Component {
               className="folder-icon"
               icon={
                 (showing && !hovering) || (!showing && hovering)
-                  ? 'folder-open'
-                  : 'folder'
+                  ? "folder-open"
+                  : "folder"
               }
             />
             {!showing && !hovering ? (
               <span className="folder-count">{Object.keys(tasks).length}</span>
             ) : (
-              ''
+              ""
             )}
           </div>
         </div>
@@ -53,7 +53,7 @@ export default class Folder extends Component {
                 updateTask={updateTasks}
               />
             ))
-          : ''}
+          : ""}
       </div>
     );
   }

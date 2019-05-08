@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './InboxCount.css';
+import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./InboxCount.css";
 
 export default class InboxCount extends Component {
   state = {
-    showPlayButton: false,
+    showPlayButton: false
   };
 
   showPlayButton = () => {
@@ -27,7 +27,7 @@ export default class InboxCount extends Component {
 
     return (
       <div
-        className={`inbox-count ${stale ? 'stale' : ''}`}
+        className={`inbox-count ${stale ? "stale" : ""}`}
         onClick={processInbox}
         onMouseEnter={this.showPlayButton}
         onMouseLeave={this.hidePlayButton}

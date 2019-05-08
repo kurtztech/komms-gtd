@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import TaskCard from './TaskCard';
-import './Tasks.css';
+import React, { Component } from "react";
+import TaskCard from "./TaskCard";
+import "./Tasks.css";
 
 export default class Tasks extends Component {
   render() {

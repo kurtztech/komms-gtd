@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './Processing.css';
+import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./Processing.css";
 
 export default class Processing extends Component {
   componentDidMount() {
     this.descRef.focus();
-    document.addEventListener('keydown', this.hotkeys);
+    document.addEventListener("keydown", this.hotkeys);
   }
 
   componentWillUnmount() {
     const { count, close } = this.props;
 
-    document.removeEventListener('keydown', this.hotkeys);
+    document.removeEventListener("keydown", this.hotkeys);
     if (count === 1) {
       close();
     }
@@ -37,7 +37,7 @@ export default class Processing extends Component {
 
   handleClick = e => {
     const { close } = this.props;
-    if (e.target === document.querySelector('#processing-overlay')) {
+    if (e.target === document.querySelector("#processing-overlay")) {
       close();
     }
   };
@@ -49,7 +49,7 @@ export default class Processing extends Component {
 
   save = () => {
     const { type } = this.props;
-    if (type === 'someday') {
+    if (type === "someday") {
       this.saveSomeday();
     } else {
       this.saveTask();
@@ -58,7 +58,7 @@ export default class Processing extends Component {
 
   saveAlt = () => {
     const { type } = this.props;
-    if (type !== 'someday') {
+    if (type !== "someday") {
       this.saveSomeday();
     } else {
       this.saveTask();
@@ -76,11 +76,11 @@ export default class Processing extends Component {
       updatedDate: newDate,
       priority: this.checkRef.checked ? 1 : 0,
       dueDate: false,
-      delegate: this.delRef.value,
+      delegate: this.delRef.value
     };
 
     switch (type) {
-      case 'someday':
+      case "someday":
         saveAsTask(oTask);
         break;
       default:
@@ -99,11 +99,11 @@ export default class Processing extends Component {
       description: this.descRef.value,
       updatedDate: newDate,
       priority: 0,
-      dueDate: false,
+      dueDate: false
     };
 
     switch (type) {
-      case 'someday':
+      case "someday":
         save(oTask);
         break;
       default:
@@ -166,9 +166,9 @@ export default class Processing extends Component {
           </div>
           <FontAwesomeIcon
             className="someday-icon"
-            icon={type !== 'someday' ? 'cloud' : 'tasks'}
+            icon={type !== "someday" ? "cloud" : "tasks"}
             onClick={this.saveAlt}
-            title={type === 'someday' ? 'Task' : 'Someday'}
+            title={type === "someday" ? "Task" : "Someday"}
           />
           <FontAwesomeIcon
             className="save-icon"

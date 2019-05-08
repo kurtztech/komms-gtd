@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import firebase from 'firebase';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import React, { Component } from "react";
+import firebase from "firebase";
+import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
   faTrash,
@@ -11,15 +11,15 @@ import {
   faCloud,
   faTasks,
   faStream,
-  faUser,
-} from '@fortawesome/free-solid-svg-icons';
-import './App.css';
-import base, { firebaseApp } from '../base';
-import InboxCount from './InboxCount';
-import InboxAdd from './InboxAdd';
-import Tasks from './Tasks';
-import Folder from './Folder';
-import Processing from './Processing';
+  faUser
+} from "@fortawesome/free-solid-svg-icons";
+import "./App.css";
+import base, { firebaseApp } from "../base";
+import InboxCount from "./InboxCount";
+import InboxAdd from "./InboxAdd";
+import Tasks from "./Tasks";
+import Folder from "./Folder";
+import Processing from "./Processing";
 
 library.add(faPlay);
 library.add(faTrash);
@@ -47,6 +47,7 @@ class App extends Component {
     hoveringSomeday: false,
     showingDelegated: true,
     hoveringDelegated: false,
+    renderCount: true
   };
 
   componentDidMount() {
@@ -59,18 +60,20 @@ class App extends Component {
       }
     });
 
-    document.addEventListener('keydown', this.hotkeys);
-    document.body.addEventListener('focus', () => {
-      this.setState();
-    });
+    document.addEventListener("keydown", this.hotkeys);
+    document.body.onfocus = this.triggerRender;
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.hotkeys);
-    document.body.removeEventListener('focus', () => {
-      this.setState();
-    });
+    document.removeEventListener("keydown", this.hotkeys);
+    document.body.onfocus = null;
   }
+
+  triggerRender = () => {
+    console.log("Focus");
+    const { renderCount } = this.state;
+    this.setState({ renderCount: !renderCount });
+  };
 
   authenticate = provider => {
     const authProvider = new firebase.auth[`${provider}AuthProvider`]();
@@ -82,34 +85,34 @@ class App extends Component {
 
   authHandler = async authData => {
     await this.setState({
-      uid: authData.user.uid,
+      uid: authData.user.uid
     });
 
     const { uid } = this.state;
 
     this.ref = base.syncState(`/${uid}/inbox`, {
       context: this,
-      state: 'inbox',
+      state: "inbox"
     });
     this.ref = base.syncState(`/${uid}/tasks`, {
       context: this,
-      state: 'tasks',
+      state: "tasks"
     });
     this.ref = base.syncState(`/${uid}/someday`, {
       context: this,
-      state: 'someday',
+      state: "someday"
     });
     this.ref = base.syncState(`/${uid}/hideTaskDescriptions`, {
       context: this,
-      state: 'hideTaskDescriptions',
+      state: "hideTaskDescriptions"
     });
     this.ref = base.syncState(`/${uid}/showingSomeday`, {
       context: this,
-      state: 'showingSomeday',
+      state: "showingSomeday"
     });
     this.ref = base.syncState(`/${uid}/showingDelegated`, {
       context: this,
-      state: 'showingDelegated',
+      state: "showingDelegated"
     });
   };
 
@@ -118,7 +121,7 @@ class App extends Component {
     this.setState({
       inbox: {},
       tasks: {},
-      uid: null,
+      uid: null
     });
     base.removeBinding(this.ref);
   };
@@ -127,18 +130,18 @@ class App extends Component {
     const { target, code } = e;
     let { hideTaskDescriptions } = { ...this.state };
 
-    if (target === document.querySelector('body')) {
+    if (target === document.querySelector("body")) {
       switch (code) {
-        case 'KeyA':
+        case "KeyA":
           e.preventDefault();
           this.inboxAddRef.titleRef.focus();
           break;
-        case 'KeyH':
+        case "KeyH":
           e.preventDefault();
           hideTaskDescriptions = !hideTaskDescriptions;
           this.setState({ hideTaskDescriptions });
           break;
-        case 'KeyP':
+        case "KeyP":
           e.preventDefault();
           this.processInbox();
           break;
@@ -147,7 +150,7 @@ class App extends Component {
       }
     }
 
-    if (code === 'Escape') {
+    if (code === "Escape") {
       this.closeProcessInbox();
       this.closeUpdateTask();
       this.blur();
@@ -199,7 +202,7 @@ class App extends Component {
     const keys = Object.keys(tasks);
     const tasksOut = {};
     keys.forEach(key => {
-      if (tasks[key].delegate === '') {
+      if (tasks[key].delegate === "") {
         tasksOut[key] = tasks[key];
       }
     });
@@ -278,7 +281,7 @@ class App extends Component {
     const keys = Object.keys(tasks);
     const tasksOut = {};
     keys.forEach(key => {
-      if (tasks[key].delegate !== '') {
+      if (tasks[key].delegate !== "") {
         tasksOut[key] = tasks[key];
       }
     });
@@ -344,6 +347,7 @@ class App extends Component {
       processingInbox,
       taskUpdating,
       somedayUpdating,
+      renderCount
     } = this.state;
 
     if (uid === null) {
@@ -354,7 +358,7 @@ class App extends Component {
           ) : (
             <button
               onClick={() => {
-                this.authenticate('Google');
+                this.authenticate("Google");
               }}
               className="login-button"
               type="button"
@@ -373,6 +377,7 @@ class App extends Component {
             inbox={inbox}
             processInbox={this.processInbox}
             stale={this.isInboxStale()}
+            renderCount={renderCount}
           />
           <InboxAdd
             ref={iar => (this.inboxAddRef = iar)}
@@ -420,7 +425,7 @@ class App extends Component {
             type="inbox"
           />
         ) : (
-          ''
+          ""
         )}
         {taskUpdating ? (
           <Processing
@@ -432,7 +437,7 @@ class App extends Component {
             type="task"
           />
         ) : (
-          ''
+          ""
         )}
         {somedayUpdating ? (
           <Processing
@@ -444,7 +449,7 @@ class App extends Component {
             type="someday"
           />
         ) : (
-          ''
+          ""
         )}
         <button className="logout-button" onClick={this.logout} type="button">
           Logout
