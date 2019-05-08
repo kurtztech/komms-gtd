@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import firebase from "firebase";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import React, { Component } from 'react';
+import firebase from 'firebase';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faPlay,
   faTrash,
@@ -11,15 +11,15 @@ import {
   faCloud,
   faTasks,
   faStream,
-  faUser
-} from "@fortawesome/free-solid-svg-icons";
-import "./App.css";
-import base, { firebaseApp } from "../base";
-import InboxCount from "./InboxCount";
-import InboxAdd from "./InboxAdd";
-import Tasks from "./Tasks";
-import Folder from "./Folder";
-import Processing from "./Processing";
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
+import './App.css';
+import base, { firebaseApp } from '../base';
+import InboxCount from './InboxCount';
+import InboxAdd from './InboxAdd';
+import Tasks from './Tasks';
+import Folder from './Folder';
+import Processing from './Processing';
 
 library.add(faPlay);
 library.add(faTrash);
@@ -46,7 +46,7 @@ class App extends Component {
     showingSomeday: true,
     hoveringSomeday: false,
     showingDelegated: true,
-    hoveringDelegated: false
+    hoveringDelegated: false,
   };
 
   componentDidMount() {
@@ -59,11 +59,17 @@ class App extends Component {
       }
     });
 
-    document.addEventListener("keydown", this.hotkeys);
+    document.addEventListener('keydown', this.hotkeys);
+    document.body.addEventListener('focus', () => {
+      this.setState();
+    });
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.hotkeys);
+    document.removeEventListener('keydown', this.hotkeys);
+    document.body.removeEventListener('focus', () => {
+      this.setState();
+    });
   }
 
   authenticate = provider => {
@@ -76,32 +82,34 @@ class App extends Component {
 
   authHandler = async authData => {
     await this.setState({
-      uid: authData.user.uid
+      uid: authData.user.uid,
     });
 
-    this.ref = base.syncState(`/${this.state.uid}/inbox`, {
+    const { uid } = this.state;
+
+    this.ref = base.syncState(`/${uid}/inbox`, {
       context: this,
-      state: "inbox"
+      state: 'inbox',
     });
-    this.ref = base.syncState(`/${this.state.uid}/tasks`, {
+    this.ref = base.syncState(`/${uid}/tasks`, {
       context: this,
-      state: "tasks"
+      state: 'tasks',
     });
-    this.ref = base.syncState(`/${this.state.uid}/someday`, {
+    this.ref = base.syncState(`/${uid}/someday`, {
       context: this,
-      state: "someday"
+      state: 'someday',
     });
-    this.ref = base.syncState(`/${this.state.uid}/hideTaskDescriptions`, {
+    this.ref = base.syncState(`/${uid}/hideTaskDescriptions`, {
       context: this,
-      state: "hideTaskDescriptions"
+      state: 'hideTaskDescriptions',
     });
-    this.ref = base.syncState(`/${this.state.uid}/showingSomeday`, {
+    this.ref = base.syncState(`/${uid}/showingSomeday`, {
       context: this,
-      state: "showingSomeday"
+      state: 'showingSomeday',
     });
-    this.ref = base.syncState(`/${this.state.uid}/showingDelegated`, {
+    this.ref = base.syncState(`/${uid}/showingDelegated`, {
       context: this,
-      state: "showingDelegated"
+      state: 'showingDelegated',
     });
   };
 
@@ -110,27 +118,27 @@ class App extends Component {
     this.setState({
       inbox: {},
       tasks: {},
-      uid: null
+      uid: null,
     });
     base.removeBinding(this.ref);
   };
 
   hotkeys = e => {
     const { target, code } = e;
+    let { hideTaskDescriptions } = { ...this.state };
 
-    if (target === document.querySelector("body")) {
+    if (target === document.querySelector('body')) {
       switch (code) {
-        case "KeyA":
+        case 'KeyA':
           e.preventDefault();
           this.inboxAddRef.titleRef.focus();
           break;
-        case "KeyH":
+        case 'KeyH':
           e.preventDefault();
-          let { hideTaskDescriptions } = { ...this.state };
           hideTaskDescriptions = !hideTaskDescriptions;
           this.setState({ hideTaskDescriptions });
           break;
-        case "KeyP":
+        case 'KeyP':
           e.preventDefault();
           this.processInbox();
           break;
@@ -139,7 +147,7 @@ class App extends Component {
       }
     }
 
-    if (code === "Escape") {
+    if (code === 'Escape') {
       this.closeProcessInbox();
       this.closeUpdateTask();
       this.blur();
@@ -191,7 +199,7 @@ class App extends Component {
     const keys = Object.keys(tasks);
     const tasksOut = {};
     keys.forEach(key => {
-      if (tasks[key].delegate === "") {
+      if (tasks[key].delegate === '') {
         tasksOut[key] = tasks[key];
       }
     });
@@ -270,7 +278,7 @@ class App extends Component {
     const keys = Object.keys(tasks);
     const tasksOut = {};
     keys.forEach(key => {
-      if (tasks[key].delegate !== "") {
+      if (tasks[key].delegate !== '') {
         tasksOut[key] = tasks[key];
       }
     });
@@ -286,7 +294,8 @@ class App extends Component {
   };
 
   toggleShowingSomeday = () => {
-    this.setState({ showingSomeday: !this.state.showingSomeday });
+    const { showingSomeday } = this.state;
+    this.setState({ showingSomeday: !showingSomeday });
   };
 
   hoveringOnDelegated = () => {
@@ -298,7 +307,8 @@ class App extends Component {
   };
 
   toggleShowingDelegated = () => {
-    this.setState({ showingDelegated: !this.state.showingDelegated });
+    const { showingDelegated } = this.state;
+    this.setState({ showingDelegated: !showingDelegated });
   };
 
   isInboxStale = () => {
@@ -321,17 +331,33 @@ class App extends Component {
   };
 
   render() {
-    if (this.state.uid === null) {
+    const {
+      uid,
+      loading,
+      inbox,
+      hideTaskDescriptions,
+      showingDelegated,
+      hoveringDelegated,
+      someday,
+      showingSomeday,
+      hoveringSomeday,
+      processingInbox,
+      taskUpdating,
+      somedayUpdating,
+    } = this.state;
+
+    if (uid === null) {
       return (
         <div className="App">
-          {this.state.loading ? (
+          {loading ? (
             <h3>Loading...</h3>
           ) : (
             <button
               onClick={() => {
-                this.authenticate("Google");
+                this.authenticate('Google');
               }}
               className="login-button"
+              type="button"
             >
               Login with Google
             </button>
@@ -344,7 +370,7 @@ class App extends Component {
       <div className="App">
         <div className="inbox-bar">
           <InboxCount
-            inbox={this.state.inbox}
+            inbox={inbox}
             processInbox={this.processInbox}
             stale={this.isInboxStale()}
           />
@@ -357,48 +383,48 @@ class App extends Component {
           <Tasks
             title="Next Tasks"
             tasks={this.getTasks()}
-            hideDescriptions={this.state.hideTaskDescriptions}
+            hideDescriptions={hideTaskDescriptions}
             updateTask={this.updateTask}
           />
           <Folder
             title="Delegated"
             tasks={this.getDelegated()}
-            hideDescriptions={this.state.hideTaskDescriptions}
+            hideDescriptions={hideTaskDescriptions}
             updateTasks={this.updateTask}
-            showing={this.state.showingDelegated}
-            hovering={this.state.hoveringDelegated}
+            showing={showingDelegated}
+            hovering={hoveringDelegated}
             toggleShowing={this.toggleShowingDelegated}
             hoveringOn={this.hoveringOnDelegated}
             hoveringOff={this.hoveringOffDelegated}
           />
           <Folder
             title="Someday"
-            tasks={this.state.someday}
-            hideDescriptions={this.state.hideTaskDescriptions}
+            tasks={someday}
+            hideDescriptions={hideTaskDescriptions}
             updateTasks={this.updateSomeday}
-            showing={this.state.showingSomeday}
-            hovering={this.state.hoveringSomeday}
+            showing={showingSomeday}
+            hovering={hoveringSomeday}
             toggleShowing={this.toggleShowingSomeday}
             hoveringOn={this.hoveringOnSomeday}
             hoveringOff={this.hoveringOffSomeday}
           />
         </div>
-        {this.state.processingInbox && this.getNextInbox() ? (
+        {processingInbox && this.getNextInbox() ? (
           <Processing
             task={this.getNextInbox()}
             save={this.saveInboxAsTask}
             saveAsSomeday={this.saveInboxAsSomeday}
             close={this.closeProcessInbox}
             delete={this.deleteFromInbox}
-            count={Object.keys(this.state.inbox).length}
+            count={Object.keys(inbox).length}
             type="inbox"
           />
         ) : (
-          ""
+          ''
         )}
-        {this.state.taskUpdating ? (
+        {taskUpdating ? (
           <Processing
-            task={this.state.taskUpdating}
+            task={taskUpdating}
             save={this.saveTask}
             saveAsSomeday={this.saveTaskAsSomeday}
             close={this.closeUpdateTask}
@@ -406,11 +432,11 @@ class App extends Component {
             type="task"
           />
         ) : (
-          ""
+          ''
         )}
-        {this.state.somedayUpdating ? (
+        {somedayUpdating ? (
           <Processing
-            task={this.state.somedayUpdating}
+            task={somedayUpdating}
             save={this.saveSomeday}
             saveAsTask={this.saveSomedayAsTask}
             close={this.closeUpdateSomeday}
@@ -418,9 +444,9 @@ class App extends Component {
             type="someday"
           />
         ) : (
-          ""
+          ''
         )}
-        <button className="logout-button" onClick={this.logout}>
+        <button className="logout-button" onClick={this.logout} type="button">
           Logout
         </button>
       </div>

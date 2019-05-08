@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./InboxCount.css";
+import React, { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import './InboxCount.css';
 
 export default class InboxCount extends Component {
   state = {
-    showPlayButton: false
+    showPlayButton: false,
   };
 
   showPlayButton = () => {
@@ -20,19 +20,21 @@ export default class InboxCount extends Component {
   };
 
   render() {
-    const { inbox } = this.props;
+    const { inbox, stale, processInbox } = this.props;
+    const { showPlayButton } = this.state;
     const inboxKeys = Object.keys(inbox);
     const inboxCount = inboxKeys.length;
 
     return (
       <div
-        className={`inbox-count ${this.props.stale ? "stale" : ""}`}
-        onClick={this.props.processInbox}
+        className={`inbox-count ${stale ? 'stale' : ''}`}
+        onClick={processInbox}
         onMouseEnter={this.showPlayButton}
         onMouseLeave={this.hidePlayButton}
         title="Process Inbox&#10;hotkey: p"
+        role="button"
       >
-        {this.state.showPlayButton ? (
+        {showPlayButton ? (
           <p className="process">
             <FontAwesomeIcon icon="play" />
           </p>

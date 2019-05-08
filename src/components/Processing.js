@@ -1,17 +1,19 @@
-import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Processing.css";
+import React, { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import './Processing.css';
 
 export default class Processing extends Component {
   componentDidMount() {
     this.descRef.focus();
-    document.addEventListener("keydown", this.hotkeys);
+    document.addEventListener('keydown', this.hotkeys);
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.hotkeys);
-    if (this.props.count === 1) {
-      this.props.close();
+    const { count, close } = this.props;
+
+    document.removeEventListener('keydown', this.hotkeys);
+    if (count === 1) {
+      close();
     }
   }
 
@@ -34,17 +36,20 @@ export default class Processing extends Component {
   };
 
   handleClick = e => {
-    if (e.target === document.querySelector("#processing-overlay")) {
-      this.props.close();
+    const { close } = this.props;
+    if (e.target === document.querySelector('#processing-overlay')) {
+      close();
     }
   };
 
   delete = () => {
-    this.props.delete(this.props.task.id);
+    const { delete: deleteTask, task } = this.props;
+    deleteTask(task.id);
   };
 
   save = () => {
-    if (this.props.type === "someday") {
+    const { type } = this.props;
+    if (type === 'someday') {
       this.saveSomeday();
     } else {
       this.saveTask();
@@ -52,7 +57,8 @@ export default class Processing extends Component {
   };
 
   saveAlt = () => {
-    if (this.props.type !== "someday") {
+    const { type } = this.props;
+    if (type !== 'someday') {
       this.saveSomeday();
     } else {
       this.saveTask();
@@ -60,7 +66,7 @@ export default class Processing extends Component {
   };
 
   saveTask = async () => {
-    const { task } = this.props;
+    const { task, type, save, saveAsTask } = this.props;
     const newDate = Date.now();
 
     const oTask = {
@@ -70,21 +76,21 @@ export default class Processing extends Component {
       updatedDate: newDate,
       priority: this.checkRef.checked ? 1 : 0,
       dueDate: false,
-      delegate: this.delRef.value
+      delegate: this.delRef.value,
     };
 
-    switch (this.props.type) {
-      case "someday":
-        this.props.saveAsTask(oTask);
+    switch (type) {
+      case 'someday':
+        saveAsTask(oTask);
         break;
       default:
-        this.props.save(oTask);
+        save(oTask);
         break;
     }
   };
 
   saveSomeday = async () => {
-    const { task } = this.props;
+    const { task, type, save, saveAsSomeday } = this.props;
     const newDate = Date.now();
 
     const oTask = {
@@ -93,21 +99,21 @@ export default class Processing extends Component {
       description: this.descRef.value,
       updatedDate: newDate,
       priority: 0,
-      dueDate: false
+      dueDate: false,
     };
 
-    switch (this.props.type) {
-      case "someday":
-        this.props.save(oTask);
+    switch (type) {
+      case 'someday':
+        save(oTask);
         break;
       default:
-        this.props.saveAsSomeday(oTask);
+        saveAsSomeday(oTask);
         break;
     }
   };
 
   render() {
-    const { task } = this.props;
+    const { task, type } = this.props;
 
     return (
       <div
@@ -160,9 +166,9 @@ export default class Processing extends Component {
           </div>
           <FontAwesomeIcon
             className="someday-icon"
-            icon={this.props.type !== "someday" ? "cloud" : "tasks"}
+            icon={type !== 'someday' ? 'cloud' : 'tasks'}
             onClick={this.saveAlt}
-            title={this.props.type === "someday" ? "Task" : "Someday"}
+            title={type === 'someday' ? 'Task' : 'Someday'}
           />
           <FontAwesomeIcon
             className="save-icon"
