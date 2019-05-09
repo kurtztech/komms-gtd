@@ -16,7 +16,9 @@ export default class Folder extends Component {
       updateTasks,
       title
     } = this.props;
-    const taskKeys = Object.keys(tasks);
+    const taskKeys = Object.keys(tasks).sort(
+      (a, b) => tasks[a].createdDate - tasks[b].createdDate
+    );
 
     return (
       <div className="tasks-list">

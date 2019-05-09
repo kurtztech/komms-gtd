@@ -5,7 +5,9 @@ import "./Tasks.css";
 export default class Tasks extends Component {
   render() {
     const { tasks, title, hideDescriptions, updateTask } = this.props;
-    const taskKeys = Object.keys(tasks);
+    const taskKeys = Object.keys(tasks).sort(
+      (a, b) => tasks[a].createdDate - tasks[b].createdDate
+    );
     const high = taskKeys.filter(key => tasks[key].priority === 1);
     const low = taskKeys.filter(key => tasks[key].priority !== 1);
 
