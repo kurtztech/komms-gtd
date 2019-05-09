@@ -115,6 +115,9 @@ export default class Processing extends Component {
   render() {
     const { task, type } = this.props;
 
+    const createdDate = new Date(task.createdDate);
+    const updatedDate = new Date(task.updatedDate);
+
     return (
       <div
         id="processing-overlay"
@@ -138,6 +141,20 @@ export default class Processing extends Component {
             defaultValue={task.description}
             title="Description"
           />
+          <div className="processing-dates">
+            <table>
+              <tbody>
+                <tr className="processing-date">
+                  <td className="processing-date-title">Created:</td>
+                  <td>{createdDate.toLocaleString()}</td>
+                </tr>
+                <tr className="processing-date">
+                  <td className="processing-date-title">Updated:</td>
+                  <td>{updatedDate.toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <FontAwesomeIcon
             className="trash-icon"
             icon="trash"

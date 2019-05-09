@@ -34,6 +34,7 @@
   border-radius: 4px;
   margin-top: 30px;
   font-size: 32px;
+  margin-bottom: 30px;
 }
 
 .desc-input {
@@ -44,7 +45,8 @@
   border-bottom: 2px solid #f0f0f0;
   box-shadow: inset 2px 2px 2px #d0d0d0;
   border-radius: 4px;
-  margin-top: 30px;
+  margin-bottom: 5px;
+  height: 225px;
 }
 
 .delegated-input {
@@ -107,4 +109,25 @@
   right: 90px;
   font-size: 32px;
   cursor: pointer;
+}
+
+.processing-dates {
+  margin: 0;
+  padding: 0;
+}
+
+.processing-date {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: #777;
+}
+
+.processing-date > td {
+  padding: 0 10px 5px 0;
+}
+
+.processing-date-title {
+  font-size: 14px;
+  color: #aaa;
 }
