@@ -22,6 +22,9 @@ export default class Tasks extends Component {
             updateTask={updateTask}
           />
         ))}
+        <br />
+        <br />
+        <br />
         {low.map(id => (
           <TaskCard
             key={id}
