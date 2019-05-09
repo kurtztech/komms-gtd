@@ -38,3 +38,15 @@
 .inbox-add > form > *:not(:last-child) {
   margin-right: 15px;
 }
+
+@media (max-width: 1200px) {
+  .inbox-add input {
+    width: 450px;
+  }
+}
+
+@media (max-width: 800px) {
+  .inbox-add input {
+    width: 300px;
+  }
+}
