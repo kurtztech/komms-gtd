@@ -14,11 +14,19 @@ export default class Folder extends Component {
       toggleShowing,
       hideDescriptions,
       updateTasks,
-      title
+      title,
+      sortTasksBy
     } = this.props;
-    const taskKeys = Object.keys(tasks).sort(
-      (a, b) => tasks[a].createdDate - tasks[b].createdDate
-    );
+    const taskKeys = Object.keys(tasks).sort((a, b) => {
+      switch (sortTasksBy) {
+        case "oldest":
+          return tasks[a].createdDate - tasks[b].createdDate;
+        case "newest":
+          return tasks[b].createdDate - tasks[a].createdDate;
+        default:
+          return tasks[b].createdDate - tasks[a].createdDate;
+      }
+    });
 
     return (
       <div className="tasks-list">

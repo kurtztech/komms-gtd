@@ -5,3 +5,9 @@
 .tasks-heading {
   margin-top: 0;
 }
+
+.task-list-sort {
+  cursor: pointer;
+  margin-left: 200px;
+  font-size: 28px;
+}

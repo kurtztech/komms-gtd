@@ -11,7 +11,9 @@ import {
   faCloud,
   faTasks,
   faStream,
-  faUser
+  faUser,
+  faSortNumericDown,
+  faSortNumericUp
 } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 import base, { firebaseApp } from "../base";
@@ -31,6 +33,8 @@ library.add(faCloud);
 library.add(faTasks);
 library.add(faStream);
 library.add(faUser);
+library.add(faSortNumericDown);
+library.add(faSortNumericUp);
 
 class App extends Component {
   state = {
@@ -47,7 +51,8 @@ class App extends Component {
     hoveringSomeday: false,
     showingDelegated: true,
     hoveringDelegated: false,
-    renderCount: true
+    renderCount: true,
+    sortTasksBy: "oldest"
   };
 
   componentDidMount() {
@@ -113,6 +118,10 @@ class App extends Component {
     this.ref = base.syncState(`/${uid}/showingDelegated`, {
       context: this,
       state: "showingDelegated"
+    });
+    this.ref = base.syncState(`/${uid}/sortTasksBy`, {
+      context: this,
+      state: "sortTasksBy"
     });
   };
 
@@ -333,6 +342,12 @@ class App extends Component {
     return inboxStale;
   };
 
+  toggleTaskSort = () => {
+    const { sortTasksBy } = this.state;
+    const newSort = sortTasksBy === "oldest" ? "newest" : "oldest";
+    this.setState({ sortTasksBy: newSort });
+  };
+
   render() {
     const {
       uid,
@@ -347,7 +362,8 @@ class App extends Component {
       processingInbox,
       taskUpdating,
       somedayUpdating,
-      renderCount
+      renderCount,
+      sortTasksBy
     } = this.state;
 
     if (uid === null) {
@@ -390,6 +406,8 @@ class App extends Component {
             tasks={this.getTasks()}
             hideDescriptions={hideTaskDescriptions}
             updateTask={this.updateTask}
+            sortTasksBy={sortTasksBy}
+            toggleTaskSort={this.toggleTaskSort}
           />
           <Folder
             title="Delegated"
@@ -401,6 +419,7 @@ class App extends Component {
             toggleShowing={this.toggleShowingDelegated}
             hoveringOn={this.hoveringOnDelegated}
             hoveringOff={this.hoveringOffDelegated}
+            sortTasksBy={sortTasksBy}
           />
           <Folder
             title="Someday"
@@ -412,6 +431,7 @@ class App extends Component {
             toggleShowing={this.toggleShowingSomeday}
             hoveringOn={this.hoveringOnSomeday}
             hoveringOff={this.hoveringOffSomeday}
+            sortTasksBy={sortTasksBy}
           />
         </div>
         {processingInbox && this.getNextInbox() ? (
