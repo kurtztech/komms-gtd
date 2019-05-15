@@ -123,6 +123,10 @@ class App extends Component {
       context: this,
       state: "showingDelegated"
     });
+    this.ref = base.syncState(`/${uid}/showingScheduled`, {
+      context: this,
+      state: "showingScheduled"
+    });
     this.ref = base.syncState(`/${uid}/sortTasksBy`, {
       context: this,
       state: "sortTasksBy"
