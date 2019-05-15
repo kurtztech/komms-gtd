@@ -9,9 +9,14 @@
   box-shadow: 0px 1px 1px 1px #d0d0d0;
 }
 
-.task-card > h3 {
+.task-card-heading {
+  padding-right: 5px;
   margin: 15px 0;
   border-radius: 5%;
+}
+
+.task-card-body {
+  padding-right: 5px;
 }
 
 .task-card:hover {

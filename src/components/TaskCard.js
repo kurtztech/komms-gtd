@@ -13,8 +13,12 @@ export default class TaskCard extends Component {
 
     return (
       <div className="task-card" onClick={this.updateTask}>
-        <h3>{task.title}</h3>
-        {this.props.hideDescriptions ? "" : <p>{task.description}</p>}
+        <h3 className="task-card-heading">{task.title}</h3>
+        {this.props.hideDescriptions ? (
+          ""
+        ) : (
+          <p className="task-card-body">{task.description}</p>
+        )}
         {task.priority === 1 || task.dueDate ? (
           <FontAwesomeIcon
             className={task.dueDate ? "task-card-due-date" : "high-priority"}
