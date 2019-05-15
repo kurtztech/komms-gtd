@@ -134,7 +134,7 @@ export default class Processing extends Component {
       <div
         id="processing-overlay"
         className="processing-overlay"
-        onClick={this.handleClick}
+        onMouseDown={this.handleClick}
         key={task.id}
       >
         <div className="processing-modal">
