@@ -70,16 +70,15 @@ class App extends Component {
     });
 
     document.addEventListener("keydown", this.hotkeys);
-    document.body.onfocus = this.triggerRender;
+    window.onfocus = this.triggerRender;
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hotkeys);
-    document.body.onfocus = null;
+    window.onfocus = null;
   }
 
   triggerRender = () => {
-    console.log("Focus");
     const { renderCount } = this.state;
     this.setState({ renderCount: !renderCount });
   };

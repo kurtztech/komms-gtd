@@ -24,15 +24,12 @@ export default class Tasks extends Component {
           return tasks[b].createdDate - tasks[a].createdDate;
       }
     });
-    const scheduled = taskKeys.filter(key => {
-      console.log(tasks[key].dueDate, currentTime);
-      return tasks[key].dueDate > 0 && tasks[key].dueDate <= currentTime;
-    });
+    const scheduled = taskKeys.filter(
+      key => tasks[key].dueDate > 0 && tasks[key].dueDate <= currentTime
+    );
     const unscheduled = taskKeys.filter(key => !tasks[key].dueDate);
     const high = unscheduled.filter(key => tasks[key].priority === 1);
     const low = unscheduled.filter(key => tasks[key].priority !== 1);
-
-    console.log({ scheduled, high, low });
 
     return (
       <div className="tasks-list">
