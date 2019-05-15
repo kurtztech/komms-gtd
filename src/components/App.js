@@ -13,7 +13,8 @@ import {
   faStream,
   faUser,
   faSortNumericDown,
-  faSortNumericUp
+  faSortNumericUp,
+  faClock
 } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 import base, { firebaseApp } from "../base";
@@ -35,6 +36,7 @@ library.add(faStream);
 library.add(faUser);
 library.add(faSortNumericDown);
 library.add(faSortNumericUp);
+library.add(faClock);
 
 class App extends Component {
   state = {
@@ -51,6 +53,8 @@ class App extends Component {
     hoveringSomeday: false,
     showingDelegated: true,
     hoveringDelegated: false,
+    showingScheduled: true,
+    hoveringScheduled: false,
     renderCount: true,
     sortTasksBy: "oldest"
   };
@@ -323,6 +327,30 @@ class App extends Component {
     this.setState({ showingDelegated: !showingDelegated });
   };
 
+  getScheduled = () => {
+    const { tasks } = { ...this.state };
+    const keys = Object.keys(tasks);
+    const tasksOut = {};
+    keys.forEach(key => {
+      if (tasks[key].dueDate) {
+        tasksOut[key] = tasks[key];
+      }
+    });
+    return tasksOut;
+  };
+  hoveringOnScheduled = () => {
+    this.setState({ hoveringScheduled: true });
+  };
+
+  hoveringOffScheduled = () => {
+    this.setState({ hoveringScheduled: false });
+  };
+
+  toggleShowingScheduled = () => {
+    const { showingScheduled } = this.state;
+    this.setState({ showingScheduled: !showingScheduled });
+  };
+
   isInboxStale = () => {
     const now = Date.now();
 
@@ -363,7 +391,9 @@ class App extends Component {
       taskUpdating,
       somedayUpdating,
       renderCount,
-      sortTasksBy
+      sortTasksBy,
+      showingScheduled,
+      hoveringScheduled
     } = this.state;
 
     if (uid === null) {
@@ -408,6 +438,18 @@ class App extends Component {
             updateTask={this.updateTask}
             sortTasksBy={sortTasksBy}
             toggleTaskSort={this.toggleTaskSort}
+          />
+          <Folder
+            title="Scheduled"
+            tasks={this.getScheduled()}
+            hideDescriptions={hideTaskDescriptions}
+            updateTasks={this.updateTask}
+            showing={showingScheduled}
+            hovering={hoveringScheduled}
+            toggleShowing={this.toggleShowingScheduled}
+            hoveringOn={this.hoveringOnScheduled}
+            hoveringOff={this.hoveringOffScheduled}
+            sortTasksBy={sortTasksBy}
           />
           <Folder
             title="Delegated"

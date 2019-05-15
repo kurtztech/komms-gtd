@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Processing.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class Processing extends Component {
+  state = {
+    dueDate: this.props.task.dueDate
+  };
+
   componentDidMount() {
     this.descRef.focus();
     document.addEventListener("keydown", this.hotkeys);
@@ -67,6 +73,7 @@ export default class Processing extends Component {
 
   saveTask = async () => {
     const { task, type, save, saveAsTask } = this.props;
+    const { dueDate } = this.state;
     const newDate = Date.now();
 
     const oTask = {
@@ -75,7 +82,7 @@ export default class Processing extends Component {
       description: this.descRef.value,
       updatedDate: newDate,
       priority: this.checkRef.checked ? 1 : 0,
-      dueDate: false,
+      dueDate,
       delegate: this.delRef.value
     };
 
@@ -91,6 +98,7 @@ export default class Processing extends Component {
 
   saveSomeday = async () => {
     const { task, type, save, saveAsSomeday } = this.props;
+    const { dueDate } = this.state;
     const newDate = Date.now();
 
     const oTask = {
@@ -99,7 +107,7 @@ export default class Processing extends Component {
       description: this.descRef.value,
       updatedDate: newDate,
       priority: 0,
-      dueDate: false
+      dueDate
     };
 
     switch (type) {
@@ -110,6 +118,10 @@ export default class Processing extends Component {
         saveAsSomeday(oTask);
         break;
     }
+  };
+
+  updateDueDate = dueDate => {
+    this.setState({ dueDate: new Date(dueDate).getTime() });
   };
 
   render() {
@@ -171,28 +183,43 @@ export default class Processing extends Component {
               ref={cr => (this.checkRef = cr)}
             />
           </div>
-          <div className="delegated-group">
-            <FontAwesomeIcon className="delegated-icon" icon="user" />
-            <input
-              id="delegated"
-              className="delegated-input"
-              type="text"
-              defaultValue={task.delegate}
-              ref={dr => (this.delRef = dr)}
+          <div className="processing-bottom-right-actions">
+            <div className="date-picker-group">
+              <FontAwesomeIcon className="date-picker-icon" icon="clock" />
+              <DatePicker
+                selected={this.state.dueDate}
+                onChange={this.updateDueDate}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="MMMM d, yyyy h:mm aa"
+                timeCaption="time"
+                className="date-picker-input"
+              />
+            </div>
+            <div className="delegated-group">
+              <FontAwesomeIcon className="delegated-icon" icon="user" />
+              <input
+                id="delegated"
+                className="delegated-input"
+                type="text"
+                defaultValue={task.delegate}
+                ref={dr => (this.delRef = dr)}
+              />
+            </div>
+            <FontAwesomeIcon
+              className="someday-icon"
+              icon={type !== "someday" ? "cloud" : "tasks"}
+              onClick={this.saveAlt}
+              title={type === "someday" ? "Task" : "Someday"}
+            />
+            <FontAwesomeIcon
+              className="save-icon"
+              icon="save"
+              onClick={this.save}
+              title="Save Task&#10;Ctrl+S"
             />
           </div>
-          <FontAwesomeIcon
-            className="someday-icon"
-            icon={type !== "someday" ? "cloud" : "tasks"}
-            onClick={this.saveAlt}
-            title={type === "someday" ? "Task" : "Someday"}
-          />
-          <FontAwesomeIcon
-            className="save-icon"
-            icon="save"
-            onClick={this.save}
-            title="Save Task&#10;Ctrl+S"
-          />
         </div>
       </div>
     );
