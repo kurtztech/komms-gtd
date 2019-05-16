@@ -27,7 +27,9 @@ export default class Tasks extends Component {
     const scheduled = taskKeys.filter(
       key => tasks[key].dueDate > 0 && tasks[key].dueDate <= currentTime
     );
-    const unscheduled = taskKeys.filter(key => !tasks[key].dueDate);
+    const unscheduled = taskKeys.filter(
+      key => !tasks[key].hasOwnProperty("dueDate") || !tasks[key].dueDate
+    );
     const high = unscheduled.filter(key => tasks[key].priority === 1);
     const low = unscheduled.filter(key => tasks[key].priority !== 1);
 
