@@ -15,6 +15,7 @@ export default class InboxAdd extends Component {
       delegate: "",
       priority: 0
     };
+
     this.props.inboxAdd(newInbox);
     this.titleRef.value = "";
   };
