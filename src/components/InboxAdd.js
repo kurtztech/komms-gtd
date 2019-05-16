@@ -10,7 +10,10 @@ export default class InboxAdd extends Component {
       id: uuidv4(),
       title: this.titleRef.value,
       createdDate: time,
-      updatedDate: time
+      updatedDate: time,
+      dueDate: false,
+      delegate: "",
+      priority: 0
     };
     this.props.inboxAdd(newInbox);
     this.titleRef.value = "";

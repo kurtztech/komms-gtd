@@ -25,7 +25,10 @@ export default class Tasks extends Component {
       }
     });
     const scheduled = taskKeys.filter(
-      key => tasks[key].dueDate > 0 && tasks[key].dueDate <= currentTime
+      key =>
+        tasks[key].hasOwnProperty("dueDate") &&
+        tasks[key].dueDate > 0 &&
+        tasks[key].dueDate <= currentTime
     );
     const unscheduled = taskKeys.filter(
       key => !tasks[key].hasOwnProperty("dueDate") || !tasks[key].dueDate

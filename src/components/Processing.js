@@ -82,8 +82,8 @@ export default class Processing extends Component {
       description: this.descRef.value,
       updatedDate: newDate,
       priority: this.checkRef.checked ? 1 : 0,
-      dueDate,
-      delegate: this.delRef.value
+      dueDate: !dueDate ? false : dueDate,
+      delegate: !this.delRef.value ? "" : this.delRef.value
     };
 
     switch (type) {
@@ -106,8 +106,9 @@ export default class Processing extends Component {
       title: this.titleRef.value,
       description: this.descRef.value,
       updatedDate: newDate,
-      priority: 0,
-      dueDate
+      priority: this.checkRef.checked ? 1 : 0,
+      dueDate: !dueDate ? false : dueDate,
+      delegate: !this.delRef.value ? "" : this.delRef.value
     };
 
     switch (type) {
