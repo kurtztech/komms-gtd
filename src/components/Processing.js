@@ -86,8 +86,6 @@ export default class Processing extends Component {
       delegate: !this.delRef.value ? "" : this.delRef.value
     };
 
-    console.log(oTask);
-
     switch (type) {
       case "someday":
         saveAsTask(oTask);

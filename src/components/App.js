@@ -180,7 +180,6 @@ class App extends Component {
   inboxAdd = oNewInbox => {
     const { inbox } = { ...this.state };
     inbox[oNewInbox.id] = oNewInbox;
-    console.log(inbox[oNewInbox.id]);
 
     this.setState({ inbox });
     this.blur();
