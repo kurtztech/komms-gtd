@@ -43,6 +43,7 @@ class App extends Component {
     inbox: {},
     tasks: {},
     someday: {},
+    completed: {},
     uid: null,
     processingInbox: false,
     hideTaskDescriptions: false,
@@ -109,6 +110,10 @@ class App extends Component {
     this.ref = base.syncState(`/${uid}/someday`, {
       context: this,
       state: "someday"
+    });
+    this.ref = base.syncState(`/${uid}/completed`, {
+      context: this,
+      state: "completed"
     });
     this.ref = base.syncState(`/${uid}/hideTaskDescriptions`, {
       context: this,
