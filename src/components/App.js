@@ -216,7 +216,7 @@ class App extends Component {
   completeFromInbox = id => {
     const { inbox, completed } = { ...this.state };
     completed[id] = inbox[id];
-    completed[id].completed = Date.now();
+    completed[id].completedDate = Date.now();
     inbox[id] = null;
     this.setState({ completed, inbox });
   };
@@ -247,7 +247,7 @@ class App extends Component {
   completeTask = id => {
     const { tasks, completed } = { ...this.state };
     completed[id] = tasks[id];
-    completed[id].completed = Date.now();
+    completed[id].completedDate = Date.now();
     tasks[id] = null;
     this.setState({ completed, tasks });
     this.closeUpdateTask();
@@ -298,7 +298,7 @@ class App extends Component {
   completeSomeday = id => {
     const { someday, completed } = { ...this.state };
     completed[id] = someday[id];
-    completed[id].completed = Date.now();
+    completed[id].completedDate = Date.now();
     someday[id] = null;
     this.setState({ completed, someday });
     this.closeUpdateSomeday();
