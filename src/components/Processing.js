@@ -37,7 +37,7 @@ export default class Processing extends Component {
       this.save();
     } else if ((e.ctrlKey || e.metaKey) && e.keyCode === 68) {
       e.preventDefault();
-      this.delete();
+      this.complete();
     }
   };
 
@@ -48,9 +48,9 @@ export default class Processing extends Component {
     }
   };
 
-  delete = () => {
-    const { delete: deleteTask, task } = this.props;
-    deleteTask(task.id);
+  complete = () => {
+    const { complete: completeTask, task } = this.props;
+    completeTask(task.id);
   };
 
   save = () => {
@@ -171,8 +171,8 @@ export default class Processing extends Component {
           <FontAwesomeIcon
             className="trash-icon"
             icon="trash"
-            onClick={this.delete}
-            title="Permanently Delete&#10;Ctrl+D"
+            onClick={this.complete}
+            title="Complete&#10;Ctrl+D"
           />
           <div className="priority-group">
             <label htmlFor="priority">Priority</label>

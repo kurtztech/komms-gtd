@@ -213,10 +213,12 @@ class App extends Component {
     this.setState({ tasks, inbox });
   };
 
-  deleteFromInbox = id => {
-    const { inbox } = { ...this.state };
+  completeFromInbox = id => {
+    const { inbox, completed } = { ...this.state };
+    completed[id] = inbox[id];
+    completed[id].completed = Date.now();
     inbox[id] = null;
-    this.setState({ inbox });
+    this.setState({ completed, inbox });
   };
 
   getTasks = () => {
@@ -242,10 +244,12 @@ class App extends Component {
     this.closeUpdateTask();
   };
 
-  deleteTask = taskId => {
-    const { tasks } = { ...this.state };
-    tasks[taskId] = null;
-    this.setState({ tasks });
+  completeTask = id => {
+    const { tasks, completed } = { ...this.state };
+    completed[id] = tasks[id];
+    completed[id].completed = Date.now();
+    tasks[id] = null;
+    this.setState({ completed, tasks });
     this.closeUpdateTask();
   };
 
@@ -291,10 +295,12 @@ class App extends Component {
     this.setState({ somedayUpdating: null });
   };
 
-  deleteSomeday = taskId => {
-    const { someday } = { ...this.state };
-    someday[taskId] = null;
-    this.setState({ someday });
+  completeSomeday = id => {
+    const { someday, completed } = { ...this.state };
+    completed[id] = someday[id];
+    completed[id].completed = Date.now();
+    someday[id] = null;
+    this.setState({ completed, someday });
     this.closeUpdateSomeday();
   };
 
@@ -491,7 +497,7 @@ class App extends Component {
             save={this.saveInboxAsTask}
             saveAsSomeday={this.saveInboxAsSomeday}
             close={this.closeProcessInbox}
-            delete={this.deleteFromInbox}
+            complete={this.completeFromInbox}
             count={Object.keys(inbox).length}
             type="inbox"
           />
@@ -504,7 +510,7 @@ class App extends Component {
             save={this.saveTask}
             saveAsSomeday={this.saveTaskAsSomeday}
             close={this.closeUpdateTask}
-            delete={this.deleteTask}
+            complete={this.completeTask}
             type="task"
           />
         ) : (
@@ -516,7 +522,7 @@ class App extends Component {
             save={this.saveSomeday}
             saveAsTask={this.saveSomedayAsTask}
             close={this.closeUpdateSomeday}
-            delete={this.deleteSomeday}
+            complete={this.completeSomeday}
             type="someday"
           />
         ) : (
